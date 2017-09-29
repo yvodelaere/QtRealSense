@@ -40,5 +40,6 @@ void MainWindow::on_startButton_clicked()
         ui->label->setPixmap(QPixmap::fromImage(depthimage));
         ui->label->show();
         cvWaitKey(1);
+        //panda
     }
 }
