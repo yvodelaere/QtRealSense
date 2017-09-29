@@ -20,7 +20,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startButton_clicked()
 {
-
+//testcommand
     rs::context ctx;
     rs::device * dev = ctx.get_device(0);
     // Configure depth to run at VGA resolution at 30 frames per second
