@@ -25,17 +25,24 @@ public:
     int getWidth();
     int getLength();
     int getFPS();
+    void updateSliders();
 private:
     Ui::MainWindow *ui;
     int Width;
     int Length;
     int FPS;
     bool runBool;
-
+    rs::context ctx;
+    rs::device * dev;
 private slots:
     void on_startBtn_clicked();
     void on_StopBtn_clicked();
     void on_ExitBtn_clicked();
+    void on_laserPwrSlider_sliderMoved(int position);
+    void on_accuracySlider_sliderMoved(int position);
+    void on_filterOptionSlider_sliderMoved(int position);
+    void on_confidenceSlider_sliderMoved(int position);
+    void on_motionrangeSlider_sliderMoved(int position);
 };
 
 #endif // MAINWINDOW_H
