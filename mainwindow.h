@@ -30,9 +30,12 @@ private:
     int Width;
     int Length;
     int FPS;
+    bool runBool;
 
 private slots:
-    void on_startButton_clicked();
+    void on_startBtn_clicked();
+    void on_StopBtn_clicked();
+    void on_ExitBtn_clicked();
 };
 
 #endif // MAINWINDOW_H

@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_startButton_clicked()
+void MainWindow::on_startBtn_clicked()
 {
     setWidth(640);
     setLength(480);
@@ -29,8 +29,8 @@ void MainWindow::on_startButton_clicked()
     dev->enable_stream(rs::stream::depth, getWidth(), getLength(), rs::format::z16, getFPS());
     dev->start();
     ui->label->setGeometry(0,0,getWidth(),getLength());
-
-    while(true){
+    runBool = true;
+    while(runBool){
         dev->wait_for_frames();
         depth_intrin = dev->get_stream_intrinsics(rs::stream::depth);
         // Create depth image
@@ -68,4 +68,16 @@ int MainWindow::getLength(){
 
 int MainWindow::getFPS(){
     return FPS;
+}
+
+void MainWindow::on_StopBtn_clicked()
+{
+    runBool = false;
+}
+
+
+void MainWindow::on_ExitBtn_clicked()
+{
+    runBool = false;
+    close();
 }

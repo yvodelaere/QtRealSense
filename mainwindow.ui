@@ -19,25 +19,51 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>480</width>
-      <height>640</height>
+      <width>640</width>
+      <height>480</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="startButton">
+   <widget class="QPushButton" name="startBtn">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>560</y>
+      <x>20</x>
+      <y>540</y>
       <width>89</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
      <string>Start</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="StopBtn">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>540</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ExitBtn">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>540</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Exit</string>
     </property>
    </widget>
   </widget>
