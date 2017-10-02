@@ -29,7 +29,7 @@ void MainWindow::on_startBtn_clicked()
     dev->start();
     ui->label->setGeometry(0,0,getWidth(),getLength());
     runBool = true;
-    //rs_apply_ivcam_preset((rs_device *)dev,RS_IVCAM_PRESET_LONG_RANGE);
+    rs_apply_ivcam_preset((rs_device *)dev,RS_IVCAM_PRESET_BACKGROUND_SEGMENTATION);
     updateSliders();
     while(runBool){
         dev->wait_for_frames();
