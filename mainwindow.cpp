@@ -20,12 +20,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startButton_clicked()
 {
-//testcommand
+    setWidth(640);
+    setLength(480);
+    setFPS(60);
     rs::context ctx;
     rs::device * dev = ctx.get_device(0);
     // Configure depth to run at VGA resolution at 30 frames per second
-    dev->enable_stream(rs::stream::depth, 640, 480, rs::format::z16, 60);
+    dev->enable_stream(rs::stream::depth, getWidth(), getLength(), rs::format::z16, getFPS());
     dev->start();
+    ui->label->setGeometry(0,0,getWidth(),getLength());
 
     while(true){
         dev->wait_for_frames();
@@ -40,6 +43,29 @@ void MainWindow::on_startButton_clicked()
         ui->label->setPixmap(QPixmap::fromImage(depthimage));
         ui->label->show();
         cvWaitKey(1);
-        //panda
     }
+}
+
+void MainWindow::setWidth(int widthIn){
+    Width = widthIn;
+}
+
+void MainWindow::setLength(int lengthIn){
+    Length = lengthIn;
+}
+
+void MainWindow::setFPS( int FPSin ){
+    FPS = FPSin;
+}
+
+int MainWindow::getWidth(){
+    return Width;
+}
+
+int MainWindow::getLength(){
+    return Length;
+}
+
+int MainWindow::getFPS(){
+    return FPS;
 }

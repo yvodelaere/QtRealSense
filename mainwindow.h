@@ -19,9 +19,17 @@ public:
     ~MainWindow();
     rs_error * e = 0;
     rs::intrinsics   depth_intrin;
-
+    void setWidth(int Width);
+    void setLength(int Length);
+    void setFPS(int FPS);
+    int getWidth();
+    int getLength();
+    int getFPS();
 private:
     Ui::MainWindow *ui;
+    int Width;
+    int Length;
+    int FPS;
 
 private slots:
     void on_startButton_clicked();
