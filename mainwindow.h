@@ -5,6 +5,11 @@
 #include <librealsense/rs.hpp>
 #include <cstdio>
 #include <opencv2/opencv.hpp>
+#include <QDebug>
+#include <string>
+#include <sstream>
+#include <QString>
+#include <fstream>
 
 namespace Ui {
 class MainWindow;
@@ -26,11 +31,13 @@ public:
     int getLength();
     int getFPS();
     void updateSliders();
+    void writeWRL(rs::float3 depth_point);
 private:
     Ui::MainWindow *ui;
     int Width;
     int Length;
     int FPS;
+    uint16_t * depth_image;
     bool runBool;
     rs::context ctx;
     rs::device * dev;
@@ -43,6 +50,7 @@ private slots:
     void on_filterOptionSlider_sliderMoved(int position);
     void on_confidenceSlider_sliderMoved(int position);
     void on_motionrangeSlider_sliderMoved(int position);
+    void on_regBtn_clicked();
 };
 
 #endif // MAINWINDOW_H
