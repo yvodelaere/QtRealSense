@@ -32,6 +32,7 @@ public:
     int getFPS();
     void updateSliders();
     void writeWRL();
+    int getFaceIndex();
 private:
     Ui::MainWindow *ui;
     int Width;

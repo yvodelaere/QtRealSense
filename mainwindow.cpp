@@ -129,13 +129,14 @@ void MainWindow::updateSliders()
 
 void MainWindow::on_regBtn_clicked()
 {
-  MainWindow::writeWRL();
+  writeWRL();
 }
 
 
 void MainWindow::writeWRL()
 {
     //Prepare wrl file
+    getFaceIndex();
     std::ofstream outputWRL;
     outputWRL.open("/home/s1594907/Desktop/output7.wrl");
     outputWRL << "#VRML V2.0 utf8 " << std::endl;
@@ -166,4 +167,31 @@ void MainWindow::writeWRL()
      }
     outputWRL << "]}}}]}" << std::endl;
     outputWRL.close();
+}
+
+
+int MainWindow::getFaceIndex(){
+   std::ifstream indexIn;
+   std::ofstream indexOut;
+   int outputIndex;
+   indexIn.open("/home/s1594907/Desktop/index.txt");
+    if (indexIn.good()){              //file exists
+        indexOut.open("/home/s1594907/Desktop/index.txt");
+        qDebug("file exists");
+        indexIn >> outputIndex;
+        indexOut << outputIndex++;
+
+        //qDebug() << outputIndex << std::endl;
+        indexIn.close();
+        indexOut.close();
+        return outputIndex;
+   }
+   else{
+        indexOut.open("/home/s1594907/Desktop/index.txt");
+        qDebug("file does not exists");
+        indexOut << 1 << std::endl;
+        indexIn.close();
+        indexOut.close();
+        return 1;
+   }
 }
