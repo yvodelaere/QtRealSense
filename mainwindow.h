@@ -31,7 +31,7 @@ public:
     int getLength();
     int getFPS();
     void updateSliders();
-    void writeWRL(rs::float3 depth_point);
+    void writeWRL();
 private:
     Ui::MainWindow *ui;
     int Width;

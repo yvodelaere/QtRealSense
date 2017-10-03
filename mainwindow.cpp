@@ -129,10 +129,15 @@ void MainWindow::updateSliders()
 
 void MainWindow::on_regBtn_clicked()
 {
+  MainWindow::writeWRL();
+}
+
+
+void MainWindow::writeWRL()
+{
     //Prepare wrl file
-    //runBool = false;
     std::ofstream outputWRL;
-    outputWRL.open("/home/s1594907/Desktop/output3.wrl");
+    outputWRL.open("/home/s1594907/Desktop/output7.wrl");
     outputWRL << "#VRML V2.0 utf8 " << std::endl;
     outputWRL << "Transform {" << std::endl;
     outputWRL << "scale 1 1 1 " << std::endl;
@@ -142,33 +147,23 @@ void MainWindow::on_regBtn_clicked()
     outputWRL << "coord Coordinate{" << std::endl;
     outputWRL << "point[" << std::endl;
 
-    //const uint16_t * depth_image = (const uint16_t *)dev->get_frame_data(rs::stream::depth);
     float scale = dev->get_depth_scale()*100;
     //
     for(int dy=0; dy<depth_intrin.height; ++dy)
+    //for(int dy=depth_intrin.height; dy>0; dy--)
     {
         for(int dx=0; dx<depth_intrin.width; ++dx)
+        //for(int dx=depth_intrin.width; dx>0; dx--)
         {
 
             // Retrieve the 16-bit depth value and map it into a depth in meters
             uint16_t depth_value = depth_image[dy * depth_intrin.width + dx];
             float depth_in_meters = depth_value * scale;
-            rs::float2 depth_pixel = {(float)dx, (float)dy};
+            rs::float2 depth_pixel = {(float)dx, (float)(depth_intrin.height - 1 - dy)};
             rs::float3 depth_point = depth_intrin.deproject(depth_pixel, depth_in_meters);
             outputWRL << depth_point.x << " " << depth_point.y << " " <<  depth_point.z << ',' << std::endl;
         }
      }
     outputWRL << "]}}}]}" << std::endl;
     outputWRL.close();
-    //runBool = true;
-}
-
-
-void MainWindow::writeWRL(rs::float3 depth_point)
-{
-    //std::stringstream teststring;
-    //teststring << depth_point.x << depth_point.y << depth_point.z << ',';
-    //QString string = teststring.str();
-    //qDebug() << string;
-
 }
