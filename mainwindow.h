@@ -42,6 +42,7 @@ private:
     bool runBool;
     rs::context ctx;
     rs::device * dev;
+    //int index;
 private slots:
     void on_startBtn_clicked();
     void on_StopBtn_clicked();

@@ -136,9 +136,10 @@ void MainWindow::on_regBtn_clicked()
 void MainWindow::writeWRL()
 {
     //Prepare wrl file
-    getFaceIndex();
+    std::ostringstream pathString;
+    pathString << "/home/s1594907/Desktop/face_" << getFaceIndex()<< ".wrl";
     std::ofstream outputWRL;
-    outputWRL.open("/home/s1594907/Desktop/output7.wrl");
+    outputWRL.open(pathString.str());
     outputWRL << "#VRML V2.0 utf8 " << std::endl;
     outputWRL << "Transform {" << std::endl;
     outputWRL << "scale 1 1 1 " << std::endl;
@@ -171,27 +172,19 @@ void MainWindow::writeWRL()
 
 
 int MainWindow::getFaceIndex(){
-   std::ifstream indexIn;
-   std::ofstream indexOut;
-   int outputIndex;
-   indexIn.open("/home/s1594907/Desktop/index.txt");
-    if (indexIn.good()){              //file exists
-        indexOut.open("/home/s1594907/Desktop/index.txt");
-        qDebug("file exists");
-        indexIn >> outputIndex;
-        indexOut << outputIndex++;
-
-        //qDebug() << outputIndex << std::endl;
-        indexIn.close();
-        indexOut.close();
-        return outputIndex;
+   int index;
+   std::fstream indexFile;
+   indexFile.open("/home/s1594907/Desktop/index.txt" , std::ios::in);
+   if (indexFile.good()){
+       indexFile >> index;
+       index += 1;
    }
    else{
-        indexOut.open("/home/s1594907/Desktop/index.txt");
-        qDebug("file does not exists");
-        indexOut << 1 << std::endl;
-        indexIn.close();
-        indexOut.close();
-        return 1;
+       index = 1;
    }
+   indexFile.close();
+   indexFile.open("/home/s1594907/Desktop/index.txt", std::ios::out | std::ios::trunc );
+   indexFile << index;
+   indexFile.close();
+   return index;
 }
