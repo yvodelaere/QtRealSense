@@ -137,7 +137,8 @@ void MainWindow::writeWRL()
 {
     //Prepare wrl file
     std::ostringstream pathString;
-    pathString << "/home/s1594907/Desktop/face_" << getFaceIndex()<< ".wrl";
+    index = getFaceIndex();
+    pathString << "data/face_" << index << ".wrl";
     std::ofstream outputWRL;
     outputWRL.open(pathString.str());
     outputWRL << "#VRML V2.0 utf8 " << std::endl;
@@ -149,7 +150,7 @@ void MainWindow::writeWRL()
     outputWRL << "coord Coordinate{" << std::endl;
     outputWRL << "point[" << std::endl;
 
-    float scale = dev->get_depth_scale()*100;
+    float scale = dev->get_depth_scale()*400;
     //
     for(int dy=0; dy<depth_intrin.height; ++dy)
     //for(int dy=depth_intrin.height; dy>0; dy--)
@@ -161,9 +162,9 @@ void MainWindow::writeWRL()
             // Retrieve the 16-bit depth value and map it into a depth in meters
             uint16_t depth_value = depth_image[dy * depth_intrin.width + dx];
             float depth_in_meters = depth_value * scale;
-            rs::float2 depth_pixel = {(float)dx, (float)(depth_intrin.height - 1 - dy)};
+            rs::float2 depth_pixel = {(float)(dx), (float)(depth_intrin.height - 1 - dy)};
             rs::float3 depth_point = depth_intrin.deproject(depth_pixel, depth_in_meters);
-            outputWRL << depth_point.x << " " << depth_point.y << " " <<  depth_point.z << ',' << std::endl;
+            outputWRL << depth_point.x << " " << depth_point.y << " " <<  (-depth_point.z) << ',' << std::endl;
         }
      }
     outputWRL << "]}}}]}" << std::endl;
@@ -187,4 +188,38 @@ int MainWindow::getFaceIndex(){
    indexFile << index;
    indexFile.close();
    return index;
+}
+
+void MainWindow::on_matchBtn_clicked()
+{
+//Gallery
+    std::fstream probegalleryStream;
+    std::ostringstream queryString;
+    probegalleryStream.open("gallery.list", std::ios::out | std::ios::trunc);
+    probegalleryStream << "data/face_" << (index-1) << ".wrl" << std::endl;
+    probegalleryStream.close();
+//Probe
+    probegalleryStream.open("probe.list", std::ios::out | std::ios::trunc);
+    probegalleryStream << "data/face_" << index << ".wrl" << std::endl;
+    probegalleryStream.close();
+    FILE *fp;
+    char path[1035];
+    //queryString <<
+    /* Open the command for reading. */
+    fp = popen("/home/s1594907/FaceRecLuuk/FaceUT3D/faceut3dbi -P probe.list -G gallery.list", "r");
+    if (fp == NULL) {
+      printf("Failed to run command\n" );
+      exit(1);
+    }
+
+    /* Read the output a line at a time - output it. */
+    while (fgets(path, sizeof(path)-1, fp) != NULL) {
+      printf("%s", path);
+      ui->textBrowser->setText(path);
+      //qDebug(path);
+    }
+
+    /* close */
+    pclose(fp);
+
 }

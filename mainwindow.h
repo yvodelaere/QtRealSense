@@ -42,7 +42,7 @@ private:
     bool runBool;
     rs::context ctx;
     rs::device * dev;
-    //int index;
+    int index;
 private slots:
     void on_startBtn_clicked();
     void on_StopBtn_clicked();
@@ -53,6 +53,7 @@ private slots:
     void on_confidenceSlider_sliderMoved(int position);
     void on_motionrangeSlider_sliderMoved(int position);
     void on_regBtn_clicked();
+    void on_matchBtn_clicked();
 };
 
 #endif // MAINWINDOW_H
