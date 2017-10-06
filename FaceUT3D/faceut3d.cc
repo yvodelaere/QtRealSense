@@ -30,7 +30,8 @@
 #include "roi.h"
 
 #include "faceut3d.h"
-
+int localverbose;
+int nearfrontal;
 void readups(char *file, UnorderedPointSet &ups)
 {
 	OrderedPointSet ops;
@@ -644,7 +645,7 @@ int Classifier::Read(char *file)
 	do { fgets(s,4095,f); } while (s[0]=='#');
 	sscanf(s,"%d",&nclassifiers);
 
-    if (localverbose2)
+    if (localverbose)
 		fprintf(stderr,"Classifier::Read(): Reading %d classifiers\n",nclassifiers);
 
 	lda=new LDA[nclassifiers];
@@ -666,7 +667,7 @@ int Classifier::Read(char *file)
 		do { fgets(s,4095,f); } while (s[0]=='#');
 		sscanf(s,"%d",&regmode[n]);
 
-        if (localverbose2>1)
+        if (localverbose>1)
 		{
 			fprintf(stderr,"classifier id=%s\n",id[n]);
 			fprintf(stderr,"regmode =%d\n",regmode[n]);
@@ -683,7 +684,7 @@ int Classifier::Read(char *file)
 		do { fgets(s,4095,f); } while (s[0]=='#');
 		sscanf(s,"%d%d\n",&width,&height);
 
-        if (localverbose2>1)
+        if (localverbose>1)
 			fprintf(stderr,"Classifier::Read(): reading mask image %dx%d\n",width,height);
 		if (width==0 && height==0)
 			maskim[n]=NULL;
@@ -699,7 +700,7 @@ int Classifier::Read(char *file)
 			}
 		}
 	}
-    if (localverbose2)
+    if (localverbose)
 		fprintf(stderr,"Classifier::Read(): nfeatures=%d\n",nfeatures);
 
 	// read thresholds
@@ -715,7 +716,7 @@ int Classifier::Read(char *file)
 		}
 		pthis=pnext;
 	}
-    if (localverbose2>1)
+    if (localverbose>1)
 		fprintf(stderr,"Classifier::Read(): Read %d thresholds\n",nclassifiers);
 
 	fclose(f);

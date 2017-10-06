@@ -229,3 +229,34 @@ void MainWindow::on_ExitBtn_clicked()
     runBool = false;
     close();
 }
+
+void MainWindow::on_testBtn_clicked()
+{
+    char *default_classifier=(char *) "classifier.mfr";
+    char *classifier=default_classifier;
+    int builtinclassifier=1;
+    Classifier mfr;
+    InitBuiltInClassifier(mfr);
+    if (builtinclassifier==0)
+        mfr.Read(classifier);
+    Features gallery(mfr.nfeatures);
+    Features probe(mfr.nfeatures);
+    double templatevector[mfr.nfeatures];
+
+    UnorderedPointSet galleryups;
+    readups("data/face_69.wrl",galleryups);
+    Register reggallery(galleryups,resolution,holefilling,spikeremoval,ellipticalmask,reflectionremoval,backgroundremoval,nosefitmethod1,LR,symmetrize,motion_threshold,maxshift,nearfrontal);
+    RangeImage regg[2];
+    regg[0].CopyDataFrom(reggallery.ri);
+    reggallery.FitNose(2);
+    reggallery.PostProc();
+    regg[1].CopyDataFrom(reggallery.ri);
+    regg[0].WriteSFI("output_orig");
+    regg[1].WriteSFI("output_alt");
+
+    mfr.Enroll(regg,templatevector);
+    gallery.Add(templatevector);
+
+
+
+}

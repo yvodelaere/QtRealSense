@@ -32,7 +32,7 @@
 #ifndef FACEUT3D_INCLUDED
 #define FACEUT3D_INCLUDED
 
-int localverbose2;
+extern int localverbose;
 
 // global constants for registration
 // resolution
@@ -57,7 +57,7 @@ const double symmetrize=4.5;
 const double motion_threshold=0;
 const double maxshift=7.5;
 
-int nearfrontal;
+extern int nearfrontal;
 // end of caonstants for registration
 
 using namespace utw3dface;
