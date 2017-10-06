@@ -48,41 +48,7 @@ void MainWindow::on_startBtn_clicked()
     }
 }
 
-void MainWindow::setWidth(int widthIn){
-    Width = widthIn;
-}
 
-void MainWindow::setLength(int lengthIn){
-    Length = lengthIn;
-}
-
-void MainWindow::setFPS( int FPSin ){
-    FPS = FPSin;
-}
-
-int MainWindow::getWidth(){
-    return Width;
-}
-
-int MainWindow::getLength(){
-    return Length;
-}
-
-int MainWindow::getFPS(){
-    return FPS;
-}
-
-void MainWindow::on_StopBtn_clicked()
-{
-    runBool = false;
-}
-
-
-void MainWindow::on_ExitBtn_clicked()
-{
-    runBool = false;
-    close();
-}
 
 // Sliders
 
@@ -150,7 +116,7 @@ void MainWindow::writeWRL()
     outputWRL << "coord Coordinate{" << std::endl;
     outputWRL << "point[" << std::endl;
 
-    float scale = dev->get_depth_scale()*400;
+    float scale = dev->get_depth_scale()*1000;
     //
     for(int dy=0; dy<depth_intrin.height; ++dy)
     //for(int dy=depth_intrin.height; dy>0; dy--)
@@ -164,7 +130,11 @@ void MainWindow::writeWRL()
             float depth_in_meters = depth_value * scale;
             rs::float2 depth_pixel = {(float)(dx), (float)(depth_intrin.height - 1 - dy)};
             rs::float3 depth_point = depth_intrin.deproject(depth_pixel, depth_in_meters);
+            if (abs(depth_point.x) == 0 | abs(depth_point.z) > 1500)
+                continue;
             outputWRL << depth_point.x << " " << depth_point.y << " " <<  (-depth_point.z) << ',' << std::endl;
+            //if (dy==((depth_intrin.height)/2) && dx == ((depth_intrin.width)/2))
+               // qDebug() << depth_point.x << " " << depth_point.y << " " <<  (-depth_point.z) << ',';// << std::endl;
         }
      }
     outputWRL << "]}}}]}" << std::endl;
@@ -175,7 +145,7 @@ void MainWindow::writeWRL()
 int MainWindow::getFaceIndex(){
    int index;
    std::fstream indexFile;
-   indexFile.open("/home/s1594907/Desktop/index.txt" , std::ios::in);
+   indexFile.open("index.txt" , std::ios::in);
    if (indexFile.good()){
        indexFile >> index;
        index += 1;
@@ -184,7 +154,7 @@ int MainWindow::getFaceIndex(){
        index = 1;
    }
    indexFile.close();
-   indexFile.open("/home/s1594907/Desktop/index.txt", std::ios::out | std::ios::trunc );
+   indexFile.open("index.txt", std::ios::out | std::ios::trunc );
    indexFile << index;
    indexFile.close();
    return index;
@@ -206,7 +176,7 @@ void MainWindow::on_matchBtn_clicked()
     char path[1035];
     //queryString <<
     /* Open the command for reading. */
-    fp = popen("/home/s1594907/FaceRecLuuk/FaceUT3D/faceut3dbi -P probe.list -G gallery.list", "r");
+    fp = popen("/home/s1594907/qt_workspace/QtRealSense/build/Recognition -P probe.list -G gallery.list -m 10", "r");
     if (fp == NULL) {
       printf("Failed to run command\n" );
       exit(1);
@@ -222,4 +192,40 @@ void MainWindow::on_matchBtn_clicked()
     /* close */
     pclose(fp);
 
+}
+
+void MainWindow::setWidth(int widthIn){
+    Width = widthIn;
+}
+
+void MainWindow::setLength(int lengthIn){
+    Length = lengthIn;
+}
+
+void MainWindow::setFPS( int FPSin ){
+    FPS = FPSin;
+}
+
+int MainWindow::getWidth(){
+    return Width;
+}
+
+int MainWindow::getLength(){
+    return Length;
+}
+
+int MainWindow::getFPS(){
+    return FPS;
+}
+
+void MainWindow::on_StopBtn_clicked()
+{
+    runBool = false;
+}
+
+
+void MainWindow::on_ExitBtn_clicked()
+{
+    runBool = false;
+    close();
 }

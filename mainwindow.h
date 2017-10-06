@@ -10,6 +10,7 @@
 #include <sstream>
 #include <QString>
 #include <fstream>
+#include <opencv2/highgui.hpp>
 
 namespace Ui {
 class MainWindow;
