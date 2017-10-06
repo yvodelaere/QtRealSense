@@ -1,0 +1,1 @@
+void InitBuiltInClassifier(Classifier &mfr);
