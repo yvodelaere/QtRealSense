@@ -7,7 +7,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateFrame()));
+    //Set Parameters
+    setWidth(640);
+    setLength(480);
+    setFPS(60);
 
+    //Initialize RealSense
+    //rs::context ctx, defined in the header. get_devices returns a pointer to a device, so member function should be called by using ->
+    dev = ctx.get_device(0);
+    //Enable the stream
+    dev->enable_stream(rs::stream::depth, getWidth(), getLength(), rs::format::z16, getFPS());
+    //Apply the background segmentation preset
+    rs_apply_ivcam_preset((rs_device *)dev,RS_IVCAM_PRESET_BACKGROUND_SEGMENTATION);
+    //Update the Sliders to the default position of the given preset
+    updateSliders();
 }
 
 
@@ -20,35 +35,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startBtn_clicked()
 {
-    setWidth(640);
-    setLength(480);
-    setFPS(60);
-    dev = ctx.get_device(0);
-    // Configure depth to run at VGA resolution at 30 frames per second
-    dev->enable_stream(rs::stream::depth, getWidth(), getLength(), rs::format::z16, getFPS());
     dev->start();
-    ui->label->setGeometry(0,0,getWidth(),getLength());
-    runBool = true;
-    rs_apply_ivcam_preset((rs_device *)dev,RS_IVCAM_PRESET_BACKGROUND_SEGMENTATION);
-    updateSliders();
-    while(runBool){
-        dev->wait_for_frames();
-        depth_intrin = dev->get_stream_intrinsics(rs::stream::depth);
-        depth_image = (uint16_t *)dev->get_frame_data(rs::stream::depth);
-        // Create depth image
-        cv::Mat depth16( depth_intrin.height,
-                         depth_intrin.width,
-                         CV_16U,
-                         depth_image);
-        cv::Mat depth8u = depth16;
-        QImage depthimage((uchar*)depth8u.data, depth8u.cols, depth8u.rows, QImage::Format_RGB16);
-        ui->label->setPixmap(QPixmap::fromImage(depthimage));
-        ui->label->show();
-        cvWaitKey(1);
-    }
+    timer->start(1000/24);
 }
 
+void MainWindow::updateFrame(){
+    dev->wait_for_frames();
+    dev->get_frame_data(rs::stream::depth);
+    depth_intrin = dev->get_stream_intrinsics(rs::stream::depth);
 
+
+    const uchar *depth_image = (const uchar *)dev->get_frame_data(rs::stream::depth);
+    QImage depthImage(depth_image, depth_intrin.width, depth_intrin.height, 1280, QImage::Format::Format_RGB444);
+    ui->label->setPixmap ( QPixmap::fromImage(depthImage).scaled(depth_intrin.width,depth_intrin.height, Qt::KeepAspectRatio));
+
+
+
+}
 
 // Sliders
 
@@ -220,7 +223,7 @@ int MainWindow::getFPS(){
 
 void MainWindow::on_StopBtn_clicked()
 {
-    runBool = false;
+    timer->stop();
 }
 
 
@@ -256,7 +259,5 @@ void MainWindow::on_testBtn_clicked()
 
     mfr.Enroll(regg,templatevector);
     gallery.Add(templatevector);
-
-
 
 }

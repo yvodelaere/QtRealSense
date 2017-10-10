@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <librealsense/rs.hpp>
 #include <cstdio>
-#include <opencv2/opencv.hpp>
 #include <QDebug>
 #include <string>
 #include <sstream>
@@ -14,22 +13,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <QTimer>
+
 #ifdef linux
 #include <unistd.h>
 #include <malloc.h>
 #endif
+
 #include <string.h>
 #include <math.h>
 #include <time.h>
 #include <libgen.h>
 #include <X11/Xarch.h>
-
 #include <opencv2/opencv.hpp>
 #include <highgui.h>
 
+//Recognition
 #include "matrixio.h"
 #include "lda.h"
-
 #include "point3d.h"
 #include "plane3d.h"
 #include "orderedpointset.h"
@@ -41,7 +42,6 @@
 #include "symmetry.h"
 #include "register.h"
 #include "roi.h"
-
 #include "faceut3d.h"
 #include "builtinclassifier.h"
 
@@ -78,6 +78,9 @@ private:
     rs::context ctx;
     rs::device * dev;
     int index;
+    QTimer *timer;
+public slots:
+    void updateFrame();
 private slots:
     void on_startBtn_clicked();
     void on_StopBtn_clicked();
